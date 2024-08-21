@@ -3,17 +3,26 @@ import img from "../../img/img.png";
 
 export const ContactList = () => {
   const [contacts, setContacts] = useState([]);
-
+  const apiURL = 'https://playground.4geeks.com/contact/agendas/brr';
 
   useEffect(() => {
-    fetch('https://playground.4geeks.com/contact/agendas/brr')
+    fetch(apiURL)
       .then(response => response.json())
-      .then(data => setContacts(data.contacts))
-      .catch(error => console.error('Error fetching contacts:', error));
-  }, []);
+      .then(data => {
+        if (data.contacts && data.contacts.length > 0) {
+          setContacts(data.contacts);
+        } else {
+          alert(`Usuario no encontrado en la API: ${apiURL}`);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching contacts:', error);
+        alert(`Error al buscar en la API: ${apiURL}`);
+      });
+  }, [apiURL]);
 
   const handleDelete = (contactId) => {
-    fetch(`https://playground.4geeks.com/contact/agendas/brr/contacts/${contactId}`, {
+    fetch(`${apiURL}/contacts/${contactId}`, {
       method: "DELETE"
     })
     .then(response => {
@@ -22,10 +31,6 @@ export const ContactList = () => {
       }
     })
     .catch(error => console.error('Error deleting contact:', error));
-  };
-
-  const handleEdit = (contactId) => {
-    navigate(`/editContact/${contactId}`);
   };
 
   return (
@@ -54,14 +59,10 @@ export const ContactList = () => {
                   </div>
                 </div>
                 <div className="position-absolute top-0 end-0 p-3">
+                  <i className="fa-solid fa-pencil me-2"></i>
                   <i 
-                    className="fa-solid fa-pencil me-2" 
-                    style={{ cursor: "pointer" }} 
-                    onClick={() => handleEdit(contact.id)}
-                  ></i>
-                  <i 
-                    className="fa-solid fa-trash" 
-                    style={{ cursor: "pointer" }} 
+                    className="fa-solid fa-trash"
+                    style={{ cursor: "pointer" }}
                     onClick={() => handleDelete(contact.id)}
                   ></i>
                 </div>

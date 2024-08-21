@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 export const AddContact = () => {
+
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
@@ -34,7 +36,7 @@ export const AddContact = () => {
         <div className="container">
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Full Name</label>
+                    <label htmlFor="name" className="form-label">Full Name </label>
                     <input 
                         type="text" 
                         className="form-control" 
@@ -46,7 +48,7 @@ export const AddContact = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
+                    <label htmlFor="exampleInputEmail1" className="form-label">Email </label>
                     <input 
                         type="email" 
                         className="form-control" 
@@ -58,7 +60,7 @@ export const AddContact = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="phone" className="form-label">Phone</label>
+                    <label htmlFor="phone" className="form-label">Phone </label>
                     <input 
                         type="text" 
                         className="form-control" 
@@ -70,7 +72,7 @@ export const AddContact = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="address" className="form-label">Address</label>
+                    <label htmlFor="address" className="form-label">Address </label>
                     <input 
                         type="text" 
                         className="form-control" 

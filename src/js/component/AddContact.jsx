@@ -1,42 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../store/appContext";
 
 export const AddContact = () => {
+    const { actions } = useContext(Context);
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        address: ""
+    });
 
-
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [address, setAddress] = useState("");
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const newContact = {
-            name: name,
-            email: email,
-            phone: phone,
-            address: address
-        };
-
-        fetch("https://playground.4geeks.com/contact/agendas/brr/contacts", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newContact)
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log("Contacto creado con éxito");
-            }
-        });
+        actions.addContact(formData);
     };
 
     return (
         <div className="container">
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Full Name </label>
+                    <label htmlFor="name" className="form-label">Full Name</label>
                     <input 
                         type="text" 
                         className="form-control" 
@@ -48,7 +39,7 @@ export const AddContact = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="exampleInputEmail1" className="form-label">Email </label>
+                    <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
                     <input 
                         type="email" 
                         className="form-control" 
@@ -60,7 +51,7 @@ export const AddContact = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="phone" className="form-label">Phone </label>
+                    <label htmlFor="phone" className="form-label">Phone</label>
                     <input 
                         type="text" 
                         className="form-control" 
@@ -72,7 +63,7 @@ export const AddContact = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="address" className="form-label">Address </label>
+                    <label htmlFor="address" className="form-label">Address</label>
                     <input 
                         type="text" 
                         className="form-control" 

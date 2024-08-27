@@ -1,45 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { Context } from "../store/appContext";
 
-export const EditContact = ({ contactId }) => {
-  const [name, setName] = useState("");
+export const EditContact = () => {
+    const { store, actions } = useContext(Context);
+    const { contactId } = useParams();
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
 
+    useEffect(() => {
+        const contact = store.contacts.find(c => c.id === parseInt(contactId));
+        if (contact) {
+            setName(contact.name || "");
+            setEmail(contact.email || "");
+            setPhone(contact.phone || "");
+            setAddress(contact.address || "");
+        } else {
+            alert('Contacto no encontrado.');
+        }
+    }, [store.contacts, contactId]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const newContact = {
-            name: name,
-            email: email,
-            phone: phone,
-            address: address
+        const updatedContact = {
+            name,
+            email,
+            phone,
+            address
         };
 
-        fetch("https://playground.4geeks.com/contact/agendas/brr/contacts", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newContact)
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log("Contacto creado con éxito");
-            }
-        });
+        actions.updateContact(contactId, updatedContact);
     };
 
     return (
         <div className="container">
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Full Name </label>
+                    <label htmlFor="name" className="form-label">Full Name</label>
                     <input 
                         type="text" 
                         className="form-control" 
                         id="name" 
-                        placeholder="Full Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
@@ -51,7 +55,6 @@ export const EditContact = ({ contactId }) => {
                         type="email" 
                         className="form-control" 
                         id="exampleInputEmail1" 
-                        placeholder="Enter Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -63,7 +66,6 @@ export const EditContact = ({ contactId }) => {
                         type="text" 
                         className="form-control" 
                         id="phone" 
-                        placeholder="Enter Phone"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                     />
@@ -75,7 +77,6 @@ export const EditContact = ({ contactId }) => {
                         type="text" 
                         className="form-control" 
                         id="address" 
-                        placeholder="Enter Address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                     />
@@ -83,7 +84,7 @@ export const EditContact = ({ contactId }) => {
 
                 <div className="d-grid gap-1">
                     <button type="submit" className="btn btn-primary">Save</button>
-                    <a className="nav-link active" aria-current="page" href="/">Click aqui para regresar a contactos</a>
+                    <a className="nav-link active" aria-current="page" href="/">Click aquí para regresar a contactos</a>
                 </div>
             </form>
         </div>

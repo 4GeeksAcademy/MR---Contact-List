@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Context } from "../store/appContext";
 import img from "../../img/img.png";
+import Swal from 'sweetalert2';
 
 export const ContactList = () => {
   const { store, actions } = useContext(Context);
@@ -11,9 +12,25 @@ export const ContactList = () => {
   }, [actions]);
 
   const handleDelete = (contactId) => {
-      if (window.confirm('¿Estás seguro de que deseas eliminar este contacto?')) {
-          actions.deleteContact(contactId);
-      }
+      Swal.fire({
+          title: '¿Estás seguro?',
+          text: "¡No podrás revertir esto!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              actions.deleteContact(contactId);
+              Swal.fire(
+                  'Eliminado!',
+                  'El contacto ha sido eliminado.',
+                  'success'
+              );
+          }
+      });
   };
 
   return (

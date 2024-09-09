@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 export const AddContact = () => {
     const { actions } = useContext(Context);
@@ -10,6 +12,8 @@ export const AddContact = () => {
         address: ""
     });
 
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -18,9 +22,31 @@ export const AddContact = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        actions.addContact(formData);
+        try {
+            await actions.addContact(formData);
+            Swal.fire({
+                title: 'Contacto Agregado',
+                text: 'El contacto se ha agregado con éxito.',
+                icon: 'success',
+                confirmButtonText: 'Ir a contactos',
+                confirmButtonColor: '#3085d6',
+                cancelButtonText: 'Cancelar',
+                cancelButtonColor: '#d33',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/');
+                }
+            });
+        } catch (error) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al agregar el contacto.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
     };
 
     return (
@@ -32,9 +58,10 @@ export const AddContact = () => {
                         type="text" 
                         className="form-control" 
                         id="name" 
+                        name="name"
                         placeholder="Full Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={formData.name}
+                        onChange={handleChange}
                     />
                 </div>
 
@@ -44,9 +71,10 @@ export const AddContact = () => {
                         type="email" 
                         className="form-control" 
                         id="exampleInputEmail1" 
+                        name="email"
                         placeholder="Enter Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={formData.email}
+                        onChange={handleChange}
                     />
                 </div>
 
@@ -56,9 +84,10 @@ export const AddContact = () => {
                         type="text" 
                         className="form-control" 
                         id="phone" 
+                        name="phone"
                         placeholder="Enter Phone"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
+                        value={formData.phone}
+                        onChange={handleChange}
                     />
                 </div>
 
@@ -68,15 +97,15 @@ export const AddContact = () => {
                         type="text" 
                         className="form-control" 
                         id="address" 
+                        name="address"
                         placeholder="Enter Address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        value={formData.address}
+                        onChange={handleChange}
                     />
                 </div>
 
                 <div className="d-grid gap-1">
                     <button type="submit" className="btn btn-primary">Save</button>
-                    <a className="nav-link active" aria-current="page" href="/">Click aqui para regresar a contactos</a>
                 </div>
             </form>
         </div>

@@ -17,7 +17,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         },
         actions: {
             addContact: (newContact) => {
-                fetch("https://playground.4geeks.com/contact/agendas/brr/contacts", {
+                fetch("https://playground.4geeks.com/contact/agendas/mica/contacts", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -32,7 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             
             fetchContacts: () => {
-                const apiURL = 'https://playground.4geeks.com/contact/agendas/brr';
+                const apiURL = 'https://playground.4geeks.com/contact/agendas/mica';
                 fetch(apiURL)
                     .then(response => response.json())
                     .then(data => {
@@ -49,7 +49,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             
             deleteContact: (contactId) => {
-                const apiURL = 'https://playground.4geeks.com/contact/agendas/brr';
+                const apiURL = 'https://playground.4geeks.com/contact/agendas/mica';
                 fetch(`${apiURL}/contacts/${contactId}`, {
                     method: "DELETE"
                 })
@@ -69,7 +69,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             
             updateContact: (contactId, updatedContact) => {
-                fetch(`https://playground.4geeks.com/contact/agendas/brr/contacts/${contactId}`, {
+                fetch(`https://playground.4geeks.com/contact/agendas/mica/contacts/${contactId}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"

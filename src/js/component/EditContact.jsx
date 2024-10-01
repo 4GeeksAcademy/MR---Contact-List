@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { useParams, useNavigate } from "react-router-dom";
 
 export const EditContact = () => {
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
     const { contactId } = useParams();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -33,6 +34,7 @@ export const EditContact = () => {
         };
 
         actions.updateContact(contactId, updatedContact);
+        navigate("/");
     };
 
     return (
@@ -83,7 +85,7 @@ export const EditContact = () => {
                 </div>
 
                 <div className="d-grid gap-1">
-                    <button type="submit" className="btn btn-primary">Save</button>
+                    <button type="submit" className="btn btn-primary">Guardar</button>
                     <a className="nav-link active" aria-current="page" href="/">Click aquí para regresar a contactos</a>
                 </div>
             </form>

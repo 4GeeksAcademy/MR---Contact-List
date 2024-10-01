@@ -13,9 +13,33 @@ const getState = ({ getStore, getActions, setStore }) => {
                     initial: "white"
                 }
             ],
-            contacts: []
+            contacts: [],
+            users: []
         },
         actions: {
+            createUser: (slug) => {
+                fetch(`https://playground.4geeks.com/contact/agendas/${slug}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        alert('Error al crear el usuario.');
+                        throw new Error('Error al crear el usuario');
+                    }
+                })
+                .then(data => {
+                    const store = getStore();
+                    setStore({ users: [...store.users, data] }); 
+                })
+                .catch(error => {
+                    console.error('Error creando el usuario:', error);
+                });
+            },
             addContact: (newContact) => {
                 fetch("https://playground.4geeks.com/contact/agendas/mica/contacts", {
                     method: "POST",
@@ -30,28 +54,34 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
                 });
             },
-            
-            fetchContacts: () => {
-                const apiURL = 'https://playground.4geeks.com/contact/agendas/mica';
+            fetchUsers: () => {
+                fetch("https://playground.4geeks.com/contact/agendas")
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.agendas) {
+                            setStore({ users: data.agendas });
+                        }
+                    })
+                    .catch(error => console.error('Error al obtener usuarios:', error));
+            },
+            fetchContacts: (user) => {
+                if (!user) return;
+                const apiURL = `https://playground.4geeks.com/contact/agendas/${user}`;
                 fetch(apiURL)
                     .then(response => response.json())
                     .then(data => {
                         if (data.contacts && data.contacts.length > 0) {
                             setStore({ contacts: data.contacts });
                         } else {
-                            alert(`Usuario no encontrado en la API: ${apiURL}`);
+                            setStore({ contacts: [] });
                         }
                     })
-                    .catch(error => {
-                        console.error('Error fetching contacts:', error);
-                        alert(`Error al buscar en la API: ${apiURL}`);
-                    });
+                    .catch(error => console.error('Error al obtener contactos:', error));
             },
-            
-            deleteContact: (contactId) => {
-                const apiURL = 'https://playground.4geeks.com/contact/agendas/mica';
+            deleteContact: (contactId, user) => {
+                const apiURL = `https://playground.4geeks.com/contact/agendas/${user}`;
                 fetch(`${apiURL}/contacts/${contactId}`, {
-                    method: "DELETE"
+                  method: "DELETE"
                 })
                 .then(response => {
                     if (response.ok) {
@@ -63,11 +93,10 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
                 })
                 .catch(error => {
-                    console.error('Error deleting contact:', error);
+                    console.error('Error al eliminar el contacto:', error);
                     alert('Error al eliminar el contacto.');
                 });
             },
-            
             updateContact: (contactId, updatedContact) => {
                 fetch(`https://playground.4geeks.com/contact/agendas/mica/contacts/${contactId}`, {
                     method: "PUT",
@@ -84,7 +113,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
                 })
                 .catch(error => {
-                    console.error('Error updating contact:', error);
+                    console.error('Error al actualizar el contacto:', error);
                     alert('Error al actualizar el contacto.');
                 });
             }
